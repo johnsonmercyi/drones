@@ -34,3 +34,10 @@ CREATE TABLE medications (
 
     PRIMARY KEY (id)
 );
+
+CREATE TABLE drones_medications (
+    drone_id                       UUID NOT NULL DEFAULT RANDOM_UUID(),
+    medications_id                  UUID NOT NULL DEFAULT RANDOM_UUID(),
+    FOREIGN KEY (drone_id)         REFERENCES drones (id),
+    FOREIGN KEY (medications_id)    REFERENCES medications (id)
+);
