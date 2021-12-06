@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class DroneServiceImpl implements DroneService {
 
     private final DroneRepo droneRepo;
+    private int medItemsTotalWeight = 0;
 
     @Override
     public Drone registerDrone(Drone drone) {
@@ -38,9 +39,30 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Drone loadDrone(String serialNo, List<Medication> medicationItems) {
-        // TODO Auto-generated method stub
-        return null;
+    public Drone loadDrone(String serialNo, Medication medicationItem) {
+        Drone drone = droneRepo.findBySerialNo(serialNo);
+        int weight = drone.getWeightLimit();
+        
+
+        if (drone.getState().getName().equals(DroneState.LOADING.name())) {
+            drone.getMedications().forEach(med -> {
+                medItemsTotalWeight += med.getWeight();
+            });
+        }
+
+        if (medItemsTotalWeight < weight) {
+            int futureWeight = medItemsTotalWeight + weight;
+
+            if (futureWeight > weight) {
+                throw new RuntimeException("Drone Overload!");
+            } else {
+                drone.getMedications().add(medicationItem);
+
+                // drone.setState();
+            }
+        }
+        
+        return drone;
     }
 
     @Override
