@@ -10,24 +10,25 @@ import com.soft.test.config.enums.DroneState;
 import com.soft.test.model.drone.Drone;
 import com.soft.test.model.medication.Medication;
 import com.soft.test.repository.DroneRepo;
-import com.soft.test.repository.DroneStateRepo;
 import com.soft.test.service.DroneService;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class DroneServiceImpl implements DroneService {
 
     private final DroneRepo droneRepo;
-    private final DroneStateRepo droneStateRepo;
     private int medItemsTotalWeight = 0;
 
     @Override
     public Drone registerDrone(Drone drone) {
+        log.info("Service hit - Save: {}", drone);
         return droneRepo.save(drone);
     }
 
@@ -48,7 +49,7 @@ public class DroneServiceImpl implements DroneService {
 
         if (drone.getBatteryCapacity() > 25) {
 
-            if (drone.getState().getName().equals(DroneState.LOADING.name())) {
+            if (drone.getState().equals(DroneState.LOADING.name())) {
                 drone.getMedications().forEach(med -> {
                     medItemsTotalWeight += med.getWeight();
                 });
@@ -61,8 +62,7 @@ public class DroneServiceImpl implements DroneService {
                     throw new RuntimeException("Drone Overload!");
                 } else {
                     drone.getMedications().add(medicationItem);
-                    com.soft.test.model.drone.DroneState state = droneStateRepo.findByName(DroneState.LOADING.name());
-                    drone.setState(state);
+                    drone.setState(DroneState.LOADING.name());
                     droneRepo.save(drone);
                 }
             }
@@ -86,7 +86,7 @@ public class DroneServiceImpl implements DroneService {
         List <Drone> availableDrones = new ArrayList<>();
 
         allDrones.stream().forEach(drone -> {
-            if (drone.getState().getName().equals(DroneState.IDLE.name())) {
+            if (drone.getState().equals(DroneState.IDLE.name())) {
                 availableDrones.add(drone);
             }
         });

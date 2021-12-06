@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
+@Slf4j
 public class DroneController {
     private final DroneService droneService;
 
@@ -29,13 +31,9 @@ public class DroneController {
         return ResponseEntity.ok().body(droneService.fetchAllDrones());
     }
 
-    @GetMapping("/drones/{serialNo}")
-    public ResponseEntity<Drone> fetchDrone (@PathVariable String serialNo) {
-        return ResponseEntity.ok().body(droneService.fetchDrone(serialNo));
-    }
-    
     @PostMapping("/drones/save")
     public ResponseEntity<Drone> registerDrone (@RequestBody Drone drone) {
+        log.info("Controller hit - /drones/save");
         return ResponseEntity.created(Util.getPathUri("/api/v1/drones/save")).body(droneService.registerDrone(drone));
     }
 
@@ -44,11 +42,11 @@ public class DroneController {
         return ResponseEntity.ok().body(droneService.availableDrones());
     }
 
-    @PostMapping("/drones/load/{id}")
-    public ResponseEntity<Drone> loadDrone (@PathVariable UUID id, @RequestBody Medication medication) {
-        return ResponseEntity.ok().body(droneService.loadDrone(id, medication));
+    @GetMapping("/drones/{serialNo}")
+    public ResponseEntity<Drone> fetchDrone (@PathVariable String serialNo) {
+        return ResponseEntity.ok().body(droneService.fetchDrone(serialNo));
     }
-
+    
     @GetMapping("/drones/{serialNo}/loadedItems")
     public ResponseEntity<List<Medication>> getLoadedItems (@PathVariable String serialNo) {
         return ResponseEntity.ok().body(droneService.loadedMedicationItems(serialNo));
@@ -58,6 +56,14 @@ public class DroneController {
     public ResponseEntity<String> checkDroneBatteryLevel (@PathVariable String serialNo) {
         return ResponseEntity.ok().body(droneService.getDroneBatteryLevel(serialNo));
     }
+    
+    @PostMapping("/drones/load/{id}")
+    public ResponseEntity<Drone> loadDrone (@PathVariable UUID id, @RequestBody Medication medication) {
+        return ResponseEntity.ok().body(droneService.loadDrone(id, medication));
+    }
+
+
+    
 
     
 }

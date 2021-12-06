@@ -9,7 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import com.soft.test.model.EntityWithUUID;
@@ -28,10 +29,9 @@ public class Drone extends EntityWithUUID {
     
     @Column(columnDefinition="VARCHAR(100) NOT NULL", unique = true)
     private String serialNo;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "model_id", referencedColumnName = "id", nullable = false)
-    private DroneModel model;
+    
+    @Column(nullable = false)
+    private String model;
 
     @Column(nullable = false)
     private Integer weightLimit;
@@ -39,9 +39,8 @@ public class Drone extends EntityWithUUID {
     @Column(nullable=false)
     private Integer batteryCapacity;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "state_id", referencedColumnName = "id", nullable = false)
-    private DroneState state;
+    @Column(nullable = false)
+    private String state;
 
     @ManyToMany(targetEntity = Medication.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Collection<Medication> medications = new ArrayList<>();
