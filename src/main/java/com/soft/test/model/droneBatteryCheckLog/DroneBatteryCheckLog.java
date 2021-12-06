@@ -1,4 +1,4 @@
-package com.soft.test.model;
+package com.soft.test.model.droneBatteryCheckLog;
 
 import java.time.LocalDateTime;
 
@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.soft.test.model.EntityWithUUID;
 import com.soft.test.model.drone.Drone;
 
 import org.hibernate.annotations.CreationTimestamp;

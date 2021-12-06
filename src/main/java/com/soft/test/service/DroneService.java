@@ -14,4 +14,5 @@ public interface DroneService {
     List <Medication> loadedMedicationItems(String serialNo);
     List <Drone> availableDrones ();
     String getDroneBatteryLevel (String serialNo);
+    Drone updateDroneBatteryCapacity (UUID id, int batteryCapacity);
 }

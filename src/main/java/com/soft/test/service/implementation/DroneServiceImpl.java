@@ -108,5 +108,12 @@ public class DroneServiceImpl implements DroneService {
         Drone drone = droneRepo.findBySerialNo(serialNo);
         return String.format("%d%s", drone.getBatteryCapacity(), "%");
     }
+
+    @Override
+    public Drone updateDroneBatteryCapacity (UUID id, int batteryCapacity) {
+        Drone droneToUpdate = droneRepo.getById(id);
+        droneToUpdate.setBatteryCapacity(batteryCapacity);
+        return droneToUpdate;
+    }
     
 }
