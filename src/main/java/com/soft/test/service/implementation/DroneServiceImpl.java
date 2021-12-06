@@ -2,6 +2,7 @@ package com.soft.test.service.implementation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -9,6 +10,7 @@ import com.soft.test.config.enums.DroneState;
 import com.soft.test.model.drone.Drone;
 import com.soft.test.model.medication.Medication;
 import com.soft.test.repository.DroneRepo;
+import com.soft.test.repository.DroneStateRepo;
 import com.soft.test.service.DroneService;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class DroneServiceImpl implements DroneService {
 
     private final DroneRepo droneRepo;
+    private final DroneStateRepo droneStateRepo;
     private int medItemsTotalWeight = 0;
 
     @Override
@@ -39,27 +42,33 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Drone loadDrone(String serialNo, Medication medicationItem) {
-        Drone drone = droneRepo.findBySerialNo(serialNo);
+    public Drone loadDrone(UUID id, Medication medicationItem) {
+        Drone drone = droneRepo.getById(id);
         int weight = drone.getWeightLimit();
-        
 
-        if (drone.getState().getName().equals(DroneState.LOADING.name())) {
-            drone.getMedications().forEach(med -> {
-                medItemsTotalWeight += med.getWeight();
-            });
-        }
+        if (drone.getBatteryCapacity() > 25) {
 
-        if (medItemsTotalWeight < weight) {
-            int futureWeight = medItemsTotalWeight + weight;
-
-            if (futureWeight > weight) {
-                throw new RuntimeException("Drone Overload!");
-            } else {
-                drone.getMedications().add(medicationItem);
-
-                // drone.setState();
+            if (drone.getState().getName().equals(DroneState.LOADING.name())) {
+                drone.getMedications().forEach(med -> {
+                    medItemsTotalWeight += med.getWeight();
+                });
             }
+    
+            if (medItemsTotalWeight < weight) {
+                int futureWeight = medItemsTotalWeight + weight;
+    
+                if (futureWeight > weight) {
+                    throw new RuntimeException("Drone Overload!");
+                } else {
+                    drone.getMedications().add(medicationItem);
+                    com.soft.test.model.drone.DroneState state = droneStateRepo.findByName(DroneState.LOADING.name());
+                    drone.setState(state);
+                    droneRepo.save(drone);
+                }
+            }
+
+        } else {
+            throw new RuntimeException("Drone Not Charged!");
         }
         
         return drone;
@@ -67,8 +76,8 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public List<Medication> loadedMedicationItems(String serialNo) {
-        // TODO Auto-generated method stub
-        return null;
+        Drone drone = droneRepo.findBySerialNo(serialNo);
+        return (List<Medication>) drone.getMedications();
     }
 
     @Override
