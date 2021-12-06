@@ -15,7 +15,7 @@ CREATE TABLE drones (
     serial_no               VARCHAR (100) NOT NULL,
     model                   VARCHAR(255) NOT NULL,
     weight_limit            INTEGER NOT NULL,
-    battery_capacity        INTEGER NOT NULL,
+    battery_capacity        INTEGER DEFAULT (100) NOT NULL,
     state                   VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (id),
@@ -30,7 +30,8 @@ CREATE TABLE medications (
     code                    VARCHAR (255) NOT NULL,
     image                   VARCHAR (1000), -- stores image link
 
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (name)
 );
 
 CREATE TABLE drones_medications (
@@ -38,4 +39,14 @@ CREATE TABLE drones_medications (
     medications_id                  UUID NOT NULL DEFAULT RANDOM_UUID(),
     FOREIGN KEY (drone_id)         REFERENCES drones (id),
     FOREIGN KEY (medications_id)    REFERENCES medications (id)
+);
+
+CREATE TABLE battery_check_logs (
+    id                      UUID NOT NULL DEFAULT RANDOM_UUID(),
+    drone_id                UUID NOT NULL,
+    battery_capacity        INTEGER NOT NULL,
+    checked_time            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (drone_id) REFERENCES drones (id)
 );

@@ -1,11 +1,11 @@
-INSERT INTO drone_models (name) VALUES ('Lightweight');
-INSERT INTO drone_models (name) VALUES ('Middleweight');
-INSERT INTO drone_models (name) VALUES ('Cruiserweight');
-INSERT INTO drone_models (name) VALUES ('Heavyweight');
+INSERT INTO medications (name, weight, code, image) 
+VALUES ('Med_1', 5, 'MED_1_CODE', 'Dummy_Image_1');
 
-INSERT INTO drone_states (name) VALUES ('IDLE');
-INSERT INTO drone_states (name) VALUES ('LOADING');
-INSERT INTO drone_states (name) VALUES ('LOADED');
-INSERT INTO drone_states (name) VALUES ('DELIVERING');
-INSERT INTO drone_states (name) VALUES ('DELIVERED');
-INSERT INTO drone_states (name) VALUES ('RETURNING');
+INSERT INTO medications (name, weight, code, image) 
+VALUES ('Med_2', 10, 'MED_2_CODE', 'Dummy_Image_1');
+
+INSERT INTO medications (name, weight, code, image) 
+VALUES ('Med_3', 100, 'MED_3_CODE', 'Dummy_Image_1');
+
+INSERT INTO medications (name, weight, code, image) 
+VALUES ('Med_4', 250, 'MED_4_CODE', 'Dummy_Image_1');

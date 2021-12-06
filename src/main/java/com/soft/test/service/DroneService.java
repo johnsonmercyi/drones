@@ -10,7 +10,7 @@ public interface DroneService {
     Drone registerDrone (Drone drone);
     List<Drone> fetchAllDrones();
     Drone fetchDrone(String serialNo);
-    Drone loadDrone (UUID id, Medication medication);
+    Drone loadDrone (UUID id, String medicationName) throws RuntimeException;
     List <Medication> loadedMedicationItems(String serialNo);
     List <Drone> availableDrones ();
     String getDroneBatteryLevel (String serialNo);

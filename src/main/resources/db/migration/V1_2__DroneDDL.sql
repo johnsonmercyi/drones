@@ -1,1 +1,0 @@
-ALTER TABLE medications ADD UNIQUE (name);
