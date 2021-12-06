@@ -15,6 +15,7 @@ import com.soft.test.service.DroneService;
 import com.soft.test.service.MedicationService;
 import com.soft.test.utility.Util;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,8 +43,38 @@ public class Controller {
     }
 
     @PostMapping("/drones/save")
-    public ResponseEntity<Drone> registerDrone(@RequestBody Drone drone) {
-        return ResponseEntity.created(Util.getPathUri("/api/v1/drones/save")).body(droneService.registerDrone(drone));
+    public ResponseEntity<Drone> registerDrone(@RequestBody Drone drone, HttpServletResponse response) {
+        // DataIntegrityViolationException
+        Map<String, Object> error = new HashMap<>();
+        Drone registeredDrone = null;
+
+        try {
+            registeredDrone = droneService.registerDrone(drone);
+        } catch (Exception e) {
+            if (e instanceof DataIntegrityViolationException) {
+                error.put("error", Boolean.TRUE);
+                error.put("message", "Drone already exist!");
+            } else {
+                error.put("error", Boolean.TRUE);
+                error.put("message", e.getMessage());
+            }
+        }
+
+        if (error.get("error") == Boolean.TRUE) {
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+            try {
+                new ObjectMapper().writeValue(response.getOutputStream(), error);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return ResponseEntity.internalServerError().build();
+        } else {
+            return ResponseEntity.created(Util.getPathUri("/api/v1/drones/save")).body(registeredDrone);
+        }
+
+        
     }
 
     @GetMapping("/drones/available")
@@ -82,7 +113,7 @@ public class Controller {
                 e.printStackTrace();
             }
 
-            return ResponseEntity.ok().build();
+            return ResponseEntity.internalServerError().build();
         } else {
             return ResponseEntity.ok().body(meds);
         }
