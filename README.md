@@ -17,6 +17,7 @@ Useful drone functions include delivery of small items that are (urgently) neede
   - checking available drones for loading
   - check drone battery level for a given drone
   - A periodic task scheduled to check Drone battery capacity and log the history (per minute) is implementated hence a log history entity is created to store history.
+  -  Here the scheduled task checks for Drones that are LOADING and simulate 1% drops per minute in battery capacity percentage. If a Drone is IDLE the battery percentage remains at 100%.
 
 ## Technologies Used
 - Spring Boot - version 2.6.1
@@ -40,7 +41,7 @@ Before building a Spring Boot project, please ensure you've the steps below:
 - Secondly set maven classpath correctly.
 
 ## BUILD - Drone Demo
-Please build using Spring Boot Maven command like so:
+Please build project using Spring Boot Maven command like so:
 ```shell
 mvn package
 ```

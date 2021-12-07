@@ -49,7 +49,6 @@ public class DroneServiceImpl implements DroneService {
         Drone drone = droneRepo.getById(id);
         int weightLimit = drone.getWeightLimit();
         Medication medToLoad = medRepo.findByName(medicationName);
-        log.info("Medication to be loaded: {}", medToLoad);
 
         if (medToLoad == null) {
             throw new RuntimeException("Medication doesn't exist!");
@@ -61,8 +60,6 @@ public class DroneServiceImpl implements DroneService {
                 drone.getMedications().forEach(med -> {
                     medItemsTotalWeight += med.getWeight();
                 });
-
-                log.info("Drone Medication Total Weight: {} and weight limit is: {}", medItemsTotalWeight, weightLimit);
             }
     
             if (medItemsTotalWeight < weightLimit) {

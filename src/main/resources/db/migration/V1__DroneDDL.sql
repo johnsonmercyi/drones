@@ -16,7 +16,7 @@ CREATE TABLE drones (
     model                   VARCHAR(255) NOT NULL,
     weight_limit            INTEGER NOT NULL,
     battery_capacity        INTEGER DEFAULT (100) NOT NULL,
-    state                   VARCHAR(255) NOT NULL,
+    state                   VARCHAR(255) DEFAULT ('IDLE') NOT NULL,
 
     PRIMARY KEY (id),
     UNIQUE (serial_no),
