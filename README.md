@@ -77,6 +77,11 @@ mvn spring-boot:run
   "medicationName": "Med_1"
 }
 ```
+Where `id`=Drone ID (UUID) and `medicationName`=Medication Name (String)
+> Medication name formats: Med_1, ..., Med_4
+
+You can fetch pre-loaded `Medication` data here: GET: [localhost:8080/api/v1/medications](http://localhost:8080/api/v1/medications)
+
 - Fetch Drone Loaded Items - GET: [localhost:8080/api/v1/drones/loadedItems/1002](http://localhost:8080/api/v1/drones/loadedItems/1002)
 - Check Drone Battery Status - GET: [localhost:8080/api/v1/drones/battery_level/1002](http://localhost:8080/api/v1/drones/battery_level/1002)
 - Fetch Available Drones - GET: [localhost:8080/api/v1/drones/available](localhost:8080/api/v1/drones/available)
